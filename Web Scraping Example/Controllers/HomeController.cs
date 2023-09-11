@@ -18,7 +18,7 @@ namespace Web_Scraping_Example.Controllers
 
         public async Task<IActionResult> Index()
         {
-            string url = "https://en.wikipedia.org/wiki/List_of_programmers";
+            string url = "https://www.ebay.com.au/itm/115649250531";
 
             List<string> programmerLinks = new List<string>();
 
@@ -34,19 +34,20 @@ namespace Web_Scraping_Example.Controllers
 
             await page.GoToAsync(url);
 
-            var links = @"Array.from(document.querySelectorAll('li:not([class])')).map(li => {
-        const firstAnchor = li.querySelector('a');
-        return firstAnchor ? firstAnchor.getAttribute('href') : null;
-    });";
-            var urls = await page.EvaluateExpressionAsync<string[]>(links);
+            var values = @"Array.from(document.querySelectorAll('div.x-price-primary')).map(div => {
+    const span = div.querySelector('span.ux-textspans');
+    return span ? span.textContent : null;
+});";
+
+
+            var urls = await page.EvaluateExpressionAsync<string[]>(values);
 
             foreach (string s in urls)
             {
-                programmerLinks.Add("https://en.wikipedia.org" + s);
+                programmerLinks.Add("price" + s);
             }
 
             ViewBag.wikilinks = programmerLinks;
-
             return View();
         }
 
